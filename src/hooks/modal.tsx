@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useCallback, useState } from 'react';
 
+import Login from '../components/Modal/Login';
 import AddTool from '../components/Modal/AddTool';
 import RemoveTool from '../components/Modal/RemoveTool';
+import { useSession } from './session';
 
 type ModalElement = null | JSX.Element;
 
@@ -26,18 +28,27 @@ export function useModal(): ModalContext {
 
 export const ModalProvider: React.FC = ({ children }) => {
   const [modal, setModal] = useState<ModalElement>(null);
+  const { isSignedIn } = useSession();
+
+  const whenSignedIn = useCallback((showModal: () => void) => {
+    if (isSignedIn) {
+      showModal();
+    } else {
+      setModal(<Login onSuccess={showModal} />);
+    }
+  }, [isSignedIn]);
 
   const showModalAdd = useCallback(() => {
-    setModal(<AddTool />);
-  }, []);
+    whenSignedIn(() => setModal(<AddTool />));
+  }, [whenSignedIn]);
 
   const showModalRemove = useCallback((id) => {
-    setModal(<RemoveTool id={id} />);
-  }, []);
+    whenSignedIn(() => setModal(<RemoveTool id={id} />));
+  }, [whenSignedIn]);
 
   const closeModal = useCallback(() => {
     setModal(null);
-  }, []);
+  }, [setModal]);
 
   return (
     <Context.Provider
