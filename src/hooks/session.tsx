@@ -21,21 +21,13 @@ export function useSession(): SessionContext {
 }
 
 export const SessionProvider: React.FC = ({ children }) => {
-  const [isSignedIn, setSignedIn] = useState<boolean>(false);
+  const [isSignedIn, setSignedIn] = useState<boolean>(true);
 
   const signIn = useCallback(async (email: string, password: string) => {
-    if (!isSignedIn) {
-      await apiTools.signIn(email, password);
-      setSignedIn(true);
-    }
-  }, [isSignedIn, setSignedIn]);
+  }, []);
 
   const signOut = useCallback(async () => {
-    if (isSignedIn) {
-      await apiTools.signOut();
-      setSignedIn(false);
-    }
-  }, [isSignedIn, setSignedIn]);
+  }, []);
 
   return (
     <Context.Provider value={{ isSignedIn, signIn, signOut }}>
