@@ -30,12 +30,23 @@ async function addTool(tool: Omit<ITool, 'id'>) {
   return data;
 }
 
+async function signIn(email: string, password: string) {
+  const { data } = await api.post('/sessions', { email, password });
+  api.defaults.headers.authorization = `Bearer ${data.token}`;
+}
+
+async function signOut() {
+  delete api.defaults.headers.authorization;
+}
+
 const apiTools = {
   getTools,
   findTools,
   findToolsByTag,
   addTool,
   removeTool,
+  signIn,
+  signOut,
 };
 
 export default apiTools;

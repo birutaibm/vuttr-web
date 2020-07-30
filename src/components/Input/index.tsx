@@ -4,14 +4,16 @@ import { useField } from '@unform/core';
 
 import { Container } from './styles';
 
-interface Props {
+type NativeProps = React.InputHTMLAttributes<HTMLInputElement> & React.InputHTMLAttributes<HTMLTextAreaElement>;
+
+interface Props extends NativeProps {
   name: string;
   label: string;
   multiline?: boolean
   required?: boolean
 }
 
-const Input: React.FC<Props> = ({ name, label, multiline=false, required=false }) => {
+const Input: React.FC<Props> = ({ name, label, multiline=false, required=false, ...rest }) => {
   const { fieldName, registerField, defaultValue, error } = useField(name);
   const ref = useRef(null);
 
@@ -37,6 +39,7 @@ const Input: React.FC<Props> = ({ name, label, multiline=false, required=false }
             name={name}
             defaultValue={defaultValue}
             rows={4}
+            {...rest}
           />
         ) : (
           <input
@@ -45,6 +48,7 @@ const Input: React.FC<Props> = ({ name, label, multiline=false, required=false }
             name={name}
             defaultValue={defaultValue}
             required={required}
+            {...rest}
           />
         )
       }

@@ -60,6 +60,36 @@ export const Button = styled.button`
     background-color: #365df0;
     color: #fff;
   }
+
+  > #spinner {
+    @keyframes spinner {
+      0%   {
+        transform: rotate(-45deg);
+      }
+      25%  {
+        transform: rotate(45deg);
+      }
+      50%  {
+        transform: rotate(135deg);
+      }
+      75%  {
+        transform: rotate(225deg);
+      }
+      100% {
+        transform: rotate(315deg);
+      }
+    }
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    border-radius: 50%;
+    border-width: 2px;
+    border-style: solid;
+    border-image: initial;
+    border-color: #fff #fff transparent;
+    animation: 0.75s linear 0s infinite normal both running spinner;
+    background: transparent !important;
+  }
 `;
 
 export const Confirmation = styled.p`
