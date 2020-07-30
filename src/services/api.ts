@@ -32,7 +32,7 @@ async function addTool(tool: Omit<ITool, 'id'>) {
 
 async function signIn(email: string, password: string) {
   const { data } = await api.post('/sessions', { email, password });
-  api.defaults.headers.authorization = `Bearer ${data}`;
+  api.defaults.headers.authorization = `Bearer ${data.token}`;
 }
 
 async function signOut() {
