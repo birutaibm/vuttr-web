@@ -13,9 +13,9 @@ export interface ITool {
 
 interface ToolsContext {
   tools: ITool[];
-  removeToolById: (id: number) => Promise<void>;
-  addTool: (tool: Omit<ITool, 'id'>) => Promise<void>
-  filterTool: (keyword: string, byTag?: boolean) => Promise<void>;
+  removeToolById: (id: number) => void;
+  addTool: (tool: Omit<ITool, 'id'>) => void;
+  filterTool: (keyword: string, byTag?: boolean) => void;
 }
 
 const Context = createContext<ToolsContext>({} as ToolsContext);
@@ -37,23 +37,31 @@ export const ToolsProvider: React.FC = ({ children }) => {
     api.getTools().then(setTools);
   }, []);
 
-  const addTool = useCallback(async (tool: Omit<ITool, 'id'>) => {
-    const created = await api.addTool(tool);
-    setTools(old => [ ...old, created ]);
-  }, [setTools]);
+  const apiError = useCallback((err) => {
+    window.alert(
+      'It appear this functionality is not supported at this version/environment'
+    );
+  }, []);
 
-  const removeToolById = useCallback(async (id: number) => {
-    await api.removeTool(id);
-    setTools(old => old.filter(tool => tool.id !== id));
-  }, [setTools]);
+  const addTool = useCallback((tool: Omit<ITool, 'id'>) => {
+    api.addTool(tool)
+      .then(created => setTools(old => [ ...old, created ]))
+      .catch(apiError);
+  }, [setTools, apiError]);
 
-  const filterTool = useCallback(async (keyword: string, byTag = false) => {
+  const removeToolById = useCallback((id: number) => {
+    api.removeTool(id)
+      .then(() => setTools(old => old.filter(tool => tool.id !== id)))
+      .catch(apiError);
+  }, [setTools, apiError]);
+
+  const filterTool = useCallback((keyword: string, byTag = false) => {
     const search = byTag ? apiTools.findToolsByTag : apiTools.findTools;
     const found = keyword.length
-      ? await search(keyword)
-      : await apiTools.getTools();
-    setTools(found);
-  }, [setTools]);
+      ? search(keyword)
+      : apiTools.getTools();
+    found.then(setTools).catch(apiError);
+  }, [setTools, apiError]);
 
   return (
     <Context.Provider value={{ tools, removeToolById, addTool, filterTool }}>

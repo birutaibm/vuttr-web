@@ -62,15 +62,32 @@ export const Button = styled.button`
   }
 
   > #spinner {
-    width: 35px;
-    height: 35px;
+    @keyframes spinner {
+      0%   {
+        transform: rotate(-45deg);
+      }
+      25%  {
+        transform: rotate(45deg);
+      }
+      50%  {
+        transform: rotate(135deg);
+      }
+      75%  {
+        transform: rotate(225deg);
+      }
+      100% {
+        transform: rotate(315deg);
+      }
+    }
+    width: 20px;
+    height: 20px;
     display: inline-block;
-    border-radius: 100%;
+    border-radius: 50%;
     border-width: 2px;
     border-style: solid;
     border-image: initial;
-    border-color: rgb(56, 163, 142) rgb(56, 163, 142) transparent;
-    animation: 0.75s linear 0s infinite normal both running animation-s8tf20;
+    border-color: #fff #fff transparent;
+    animation: 0.75s linear 0s infinite normal both running spinner;
     background: transparent !important;
   }
 `;
